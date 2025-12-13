@@ -1153,4 +1153,8 @@ img{
   background-color: #EAEAEA;
 }
 
+.section{
+  margin-top: 2%;
+  border-top: solid 3px #FF4500
+}
  
