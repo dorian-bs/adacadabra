@@ -38,24 +38,42 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         <div>
             Along with the initial subreddit hyperlinks dataset, we used another dataset: 
             the embedding vectors of subreddits (available on the SNAP website).
-        </div>
-        <div>
+            <br><br>
             These embeddings are high-dimensional vectors (in our case, 300 dimensions). 
             They are designed to represent similarities between data points in a complex space. 
             Specifically, each of the ~50,000 subreddits is assigned a 300-dimensional vector. 
             These vectors indicate similarity based on user behavior: if many users post in 
-            the same group of subreddits, those subreddits will be closer to each other in this 300-dimensional space.
-        </div>
-        <div>
+            the same group of subreddits, those subreddits will be closer to each other in this
+            300-dimensional space.
+            <br><br>
             These embeddings are very useful for our research on linguistic quality and our goal to determine 
             'who speaks the best.' They allow us to identify clusters of subreddits where users share similar 
             interests, effectively grouping subreddits into distinct communities.
         </div>
+        
         <h3>Weakness</h3>
         <div>
-            "While these embeddings are powerful and perform well, the dataset faces challenges due to the nature of Reddit communities.
-
-In reality, communities are not perfectly separated into 'clean' clusters where we can easily say: 'These users are only interested in politics.' Most users have diverse interests and post in a wide variety of subreddits. This creates a significant amount of overlap between vectors. Consequently, some subreddits appear very close to many others in the 300-dimensional space, which can create 'noisy' links and blur the boundaries between different communities.
+            "While these embeddings are powerful and perform well, the dataset faces challenges due to the
+            nature of Reddit communities.
+            <br><br>
+            In reality, communities are not perfectly separated into 'clean' clusters where we can easily say: 
+            'These users are only interested in politics.' Most users have diverse interests and post in a wide
+            variety of subreddits. This creates a significant amount of overlap between vectors. Consequently, 
+            some subreddits appear very close to many others in the 300-dimensional space, which can create 'noisy' 
+            links and blur the boundaries between different communities.
+            <br><br>
+            The following graphs illustrate the weaknesses mentioned previously.
+            <br><br>
+            On the left, a 2D projection (using dimensionality reduction) of the 50,000 subreddits shows the vectors 
+            forming a large, dense circle with significant overlap. This visualization confirms that many communities
+            are not clearly separated.
+            <br><br>
+            On the right, the graph displays the distribution of close neighbors (subreddits with a cosine similarity > 0.8).
+            Cosine similarity measures the orientation of two vectors in the 300-dimensional space, ranging from -1 (opposite)
+            to 1 (identical). The distribution reveals a non-negligible number of subreddits that have more than 10,000 neighbors 
+            with over 80% similarity. This high connectivity indicates that many subreddits share very similar user profiles, making 
+            it difficult to isolate distinct linguistic communities."
+            <br><br>
         </div>
         
     </div>
