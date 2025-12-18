@@ -33,7 +33,9 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         <div>
             [Introduce what our dataset is]
         </div>
+
         <h2>Embeddings</h2>
+        
         <h3>Introduction</h3>
         <div>
             Along with the initial subreddit hyperlinks dataset, we used another dataset: 
@@ -53,7 +55,7 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         
         <h3>Weakness</h3>
         <div>
-            "While these embeddings are powerful and perform well, the dataset faces challenges due to the
+            While these embeddings are powerful and perform well, the dataset faces challenges due to the
             nature of Reddit communities.
             <br><br>
             In reality, communities are not perfectly separated into 'clean' clusters where we can easily say: 
@@ -61,12 +63,9 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
             variety of subreddits. This creates a significant amount of overlap between vectors. Consequently, 
             some subreddits appear very close to many others in the 300-dimensional space, which can create 'noisy' 
             links and blur the boundaries between different communities.
-            <br><br>
-            
-            
         </div>
-        <h3>Visualizing the Embedding Weaknesses</h2>
-        <div>
+
+        <h3>Visualizing the Embedding Weaknesses</h3> <div>
             The following graphs illustrate the weaknesses mentioned previously.
             <br><br>
             On the left, a 2D projection (using dimensionality reduction) of the 50,000 subreddits shows the vectors 
@@ -76,20 +75,21 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
             On the right, the graph displays the distribution of close neighbors (subreddits with a cosine similarity > 0.8).
             Cosine similarity measures the orientation of two vectors in the 300-dimensional space, ranging from -1 (opposite)
             to 1 (identical). The distribution reveals a non-negligible number of subreddits that have more than 10,000 neighbors 
-            with over 80% similarity. This high connectivity indicates that many subreddits share very similar user profiles, making 
-            it difficult to isolate distinct linguistic communities."
+            with over 80% similarity.
         </div>
 
-        <div style="display: flex; justify-content: space-around;">
-            <div style="text-align: center;">
-                <iframe src="assets/plots/reddit_map.png" alt="2D Map" style="width: 300px;">
+        <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-top: 20px;">
+            
+            <div style="text-align: center; width: 45%;">
+                <iframe src="assets/plots/reddit_map.html" style="width: 100%; height: 300px; border: none;"></iframe>
                 <p><i>2D Projection of Subreddits</i></p>
             </div>
-            <div style="text-align: center;">
-                <img src="assets/plots/distribution_of_closed_neigbors_embeddings.png" alt="Distribution" style="width: 300px;">
+
+            <div style="text-align: center; width: 45%;">
+                <img src="assets/plots/distribution_of_closed_neigbors_embeddings.png" alt="Distribution" style="width: 100%; max-width: 400px;">
                 <p><i>Neighbor Distribution</i></p>
             </div>
-        </div>      
+        </div> 
     </div>
 </div>
 
