@@ -62,6 +62,11 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
             some subreddits appear very close to many others in the 300-dimensional space, which can create 'noisy' 
             links and blur the boundaries between different communities.
             <br><br>
+            
+            
+        </div>
+        <h3>Visualizing the Embedding Weaknesses</h2>
+        <div>
             The following graphs illustrate the weaknesses mentioned previously.
             <br><br>
             On the left, a 2D projection (using dimensionality reduction) of the 50,000 subreddits shows the vectors 
@@ -73,9 +78,18 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
             to 1 (identical). The distribution reveals a non-negligible number of subreddits that have more than 10,000 neighbors 
             with over 80% similarity. This high connectivity indicates that many subreddits share very similar user profiles, making 
             it difficult to isolate distinct linguistic communities."
-            <br><br>
         </div>
-        
+
+        <div style="display: flex; justify-content: space-around;">
+            <div style="text-align: center;">
+                <iframe src="assets/plots/reddit_map.png" alt="2D Map" style="width: 300px;">
+                <p><i>2D Projection of Subreddits</i></p>
+            </div>
+            <div style="text-align: center;">
+                <img src="assets/plots/distribution_of_closed_neigbors_embeddings.png" alt="Distribution" style="width: 300px;">
+                <p><i>Neighbor Distribution</i></p>
+            </div>
+        </div>      
     </div>
 </div>
 
