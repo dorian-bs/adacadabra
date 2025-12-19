@@ -4,555 +4,454 @@ title: The War of The Learned
 subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
 ---
 
-<img src="assets/reddit_posts/post_1.png" width="50%" >
+<!-- ========================================== -->
+<!-- INTERNAL STYLES (Make editing easier)      -->
+<!-- ========================================== -->
+<style>
+    /* General Layout */
+    .section {
+        margin-bottom: 60px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+    .section:first-of-type {
+        border-top: none;
+    }
 
-<div class="section" style="border-top: 0px;">
-    TLDR; [Maybe add a tldr, could emphasise that we are answering from a "user" per
-    perspective. I'm not 100% convinced]
-    <br><br>
+    /* Images & Figures */
+    .post-image {
+        display: block;
+        margin: 20px auto;
+        max-width: 80%;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 
-    It's not the first time I've seen such sentiments around here. Actually,
-    I find it super interesting, as such discussions about "linguistic quality" are not recent,
-    in fact you can find them pretty much at any point 
-    since we've begun to standardise our languages. Still, with the rise of 
-    social media and instant messaging, such perceptions have been on the rise
-    and it could be interesting to know if they are based on actual data. And
-    if so, what motivates the difference of language quality between users.
+    /* Blue Plot Containers (The frames around iframes) */
+    .blue-frame {
+        width: 100%;
+        border: 2px solid #0143f8;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #0143f8;
+        margin-bottom: 10px;
+    }
+    
+    .plot-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px 0;
+    }
 
-    <br><br>
+    .plot-caption {
+        font-size: 0.9em;
+        font-style: italic;
+        color: #555;
+        text-align: center;
+    }
 
-    [Should we add here the different research questions? Or do we keep
-    the "comment based approach"? Or both?]
+    /* Layout Grids */
+    .grid-2-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin: 30px 0;
+    }
 
+    .flex-row {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+        margin: 30px 0;
+    }
+
+    /* Cluster Lists Styling */
+    .cluster-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 0.95em;
+    }
+
+    .cluster-list li {
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .cluster-list strong {
+        color: #0143f8;
+    }
+
+    /* Highlights for your "To-Do" notes */
+    .todo-note {
+        background-color: #fff9c4;
+        border-left: 4px solid #fbc02d;
+        padding: 10px;
+        font-size: 0.9em;
+        margin: 15px 0;
+        font-family: monospace;
+        color: #444;
+    }
+    
+    .todo-label {
+        font-weight: bold;
+        color: #f57f17;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .grid-2-col, .flex-row {
+            grid-template-columns: 1fr;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<!-- ========================================== -->
+<!-- MAIN CONTENT                               -->
+<!-- ========================================== -->
+
+<img src="assets/reddit_posts/post_1.png" class="post-image" style="width: 50%;">
+
+<!-- SECTION: INTRO -->
+<div class="section" style="border-top: 0;">
+    
+    <div class="todo-note">
+        <span class="todo-label">TODO: TLDR Section</span>
+        Maybe add a tldr, could emphasise that we are answering from a "user" perspective. I'm not 100% convinced.
+    </div>
+
+    <p>
+        It's not the first time I've seen such sentiments around here. Actually, I find it super interesting, 
+        as such discussions about "linguistic quality" are not recent. In fact, you can find them pretty much 
+        at any point since we've begun to standardise our languages. Still, with the rise of social media 
+        and instant messaging, such perceptions have been on the rise and it could be interesting to know 
+        if they are based on actual data. And if so, what motivates the difference of language quality between users.
+    </p>
+
+    <div class="todo-note">
+        Should we add here the different research questions? Or do we keep the "comment based approach"? Or both?
+    </div>
 </div>
 
+<!-- SECTION: DATASET -->
 <div class="section">
-    <h1>Dataset</h1>
-    <div>
-        <h2>Hyperlinks</h2>
-        <div>
-            [Introduce what our dataset is]
-        </div>
+    <h1>1. Dataset</h1>
+    
+    <h2>Hyperlinks</h2>
+    <div class="todo-note">[Introduce what our dataset is]</div>
 
-        <h2>Embeddings</h2>
-        
-        <h3>Introduction</h3>
-        <div>
-            Along with the initial subreddit hyperlinks dataset, we used another dataset: 
-            the embedding vectors of subreddits (available on the SNAP website).
-            <br><br>
-            These embeddings are high-dimensional vectors (in our case, 300 dimensions). 
-            They are designed to represent similarities between data points in a complex space. 
-            Specifically, each of the ~50,000 subreddits is assigned a 300-dimensional vector. 
-            These vectors indicate similarity based on user behavior: if many users post in 
-            the same group of subreddits, those subreddits will be closer to each other in this
-            300-dimensional space.
-            <br><br>
-            These embeddings are very useful for our research on linguistic quality and our goal to determine 
-            'who speaks the best.' They allow us to identify clusters of subreddits where users share similar 
-            interests, effectively grouping subreddits into distinct communities.
-        </div>
-        
-        <h3>Weakness</h3>
-        <div>
-            While these embeddings are powerful and perform well, the dataset faces challenges due to the
-            nature of Reddit communities and the high number of data.
-            <br><br>
-            "One might assume that a dataset of 50,000 subreddits is relatively small. However, each 
-            entry is a 300-dimensional vector, and determining similarity requires computing a pairwise 
-            distance matrix. Calculating the similarity between every possible pair of subreddits is a computationally 
-            intensive task; a full matrix for 50,000 subreddits would require approximately 20GB of RAM, exceeding the capacity 
-            of most standard machines and leading to system crashes.
-            <br><br>
-            To overcome this technical hurdle, we implemented a batch processing approach. By performing 
-            calculations in blocks, we efficiently managed memory usage without compromising the integrity 
-            of the results. While this hardware limitation was easy to solve, the more significant challenge remains 
-            the inherent 'noise' and overlap within the nature of Reddit communities themselves."
-            <br><br>
-            Indeed communities are not perfectly separated into 'clean' clusters where we can easily say: 
-            'These users are only interested in politics.' Most users have diverse interests and post in a wide
-            variety of subreddits. This creates a significant amount of overlap between vectors. Consequently, 
-            some subreddits appear very close to many others in the 300-dimensional space, which can create 'noisy' 
-            links and blur the boundaries between different communities.
-        </div>
+    <h2>Embeddings</h2>
+    
+    <h3>Introduction</h3>
+    <p>
+        Along with the initial subreddit hyperlinks dataset, we used another dataset: 
+        the embedding vectors of subreddits (available on the SNAP website).
+    </p>
+    <p>
+        These embeddings are high-dimensional vectors (in our case, 300 dimensions). 
+        They are designed to represent similarities between data points in a complex space. 
+        Specifically, each of the ~50,000 subreddits is assigned a 300-dimensional vector. 
+        These vectors indicate similarity based on user behavior: if many users post in 
+        the same group of subreddits, those subreddits will be closer to each other in this
+        300-dimensional space.
+    </p>
+    <p>
+        These embeddings are very useful for our research on linguistic quality and our goal to determine 
+        'who speaks the best.' They allow us to identify clusters of subreddits where users share similar 
+        interests, effectively grouping subreddits into distinct communities.
+    </p>
+    
+    <h3>Weakness</h3>
+    <p>
+        While these embeddings are powerful and perform well, the dataset faces challenges due to the
+        nature of Reddit communities and the high number of data.
+    </p>
+    <blockquote>
+        "One might assume that a dataset of 50,000 subreddits is relatively small. However, each 
+        entry is a 300-dimensional vector, and determining similarity requires computing a pairwise 
+        distance matrix. Calculating the similarity between every possible pair of subreddits is a computationally 
+        intensive task... To overcome this technical hurdle, we implemented a batch processing approach."
+    </blockquote>
+    <p>
+        Indeed communities are not perfectly separated into 'clean' clusters where we can easily say: 
+        'These users are only interested in politics.' Most users have diverse interests and post in a wide
+        variety of subreddits. This creates a significant amount of overlap between vectors.
+    </p>
 
-        <h3>Visualizing the Embedding Weaknesses</h3> 
-        <div>
-            The following graphs illustrate the weakness mentioned previously.
-            <br><br>
-            On fig 1, a 2D projection (using dimensionality reduction) of the 50,000 subreddits shows the vectors 
-            forming a large, dense circle with significant overlap. This visualization confirms that many communities
-            are not clearly separated.
-            <br><br>
-            On fig 2, the graph displays the distribution of close neighbors (subreddits with a cosine similarity > 0.8).
-            Cosine similarity measures the orientation of two vectors in the 300-dimensional space, ranging from -1 (opposite)
-            to 1 (identical). The distribution reveals a non-negligible number of subreddits that have more than 10,000 neighbors 
-            with over 80% similarity.
-        </div>
-   
-        <div style="display: flex; flex-direction: column; gap: 40px; margin: 30px 0;">
+    <h3>Visualizing the Embedding Weaknesses</h3> 
+    <p>
+        The following graphs illustrate the weakness mentioned previously.
+    </p>
+    <ul>
+        <li><b>Figure 1:</b> A 2D projection shows vectors forming a large, dense circle with significant overlap.</li>
+        <li><b>Figure 2:</b> The distribution of close neighbors reveals subreddits with over 10,000 neighbors (>80% similarity).</li>
+    </ul>
 
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="width: 100%; height: 600px; border: 2px solid #0143f8; border-radius: 8px; overflow: hidden; background: #0143f8;">
-                <iframe 
-                    src="assets/plots/embeddings_and_clustering/reddit_map.html" 
-                    style="width: 100%; height: 100%; border: none;">
-                </iframe>
+    <!-- Grid for Side-by-Side Plots (Stacked on mobile) -->
+    <div class="grid-2-col">
+        <!-- Plot 1 -->
+        <div class="plot-container">
+            <div class="blue-frame" style="height: 600px;">
+                <iframe src="assets/plots/embeddings_and_clustering/reddit_map.html" width="100%" height="100%" style="border:none;"></iframe>
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em;"><i>Figure 1: 2D Projection of Subreddits</i></p>
+            <p class="plot-caption">Figure 1: 2D Projection of Subreddits</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="width: 100%; height: 500px; border: 2px solid #0143f8; border-radius: 8px; overflow: hidden; background: #0143f8; display: flex; align-items: center; justify-content: center;">
-                <img 
-                    src="assets/plots/embeddings_and_clustering/distribution_of_closed_neigbors_embeddings.png" 
-                    alt="Distribution" 
-                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        <!-- Plot 2 -->
+        <div class="plot-container">
+            <div class="blue-frame" style="height: 500px; display: flex; align-items: center; justify-content: center;">
+                <img src="assets/plots/embeddings_and_clustering/distribution_of_closed_neigbors_embeddings.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em;"><i>Figure 2: Distribution of Close Neighbors</i></p>
+            <p class="plot-caption">Figure 2: Distribution of Close Neighbors</p>
         </div>
     </div>
 </div>
 
-</div>
-        
-    </div>
-</div>
-
+<!-- SECTION: DEFINING LANGUAGE -->
 <div class="section">
-    <h1>What is language</h1>
-    The first thing we need to know when trying to understand language quality
-    on reddit, is to actually define what language quality <em>is</em>. We could 
-    define language quality of a text as "<b>the similarity between a text and
-    a shared construction of the "perfect" language</b>. [do you agree? should i remove it?]
-    However, we cannot apply directly such a definition to our data, we need to 
-    find a way to operationalise such a concept. Thus, I decided to take an
-    approach that combined both what our data provided and what different measures
-    suggested that this "shared construction" is, arriving at the following metric:
+    <h1>2. What is language quality?</h1>
+    <p>
+        The first thing we need to know when trying to understand language quality on reddit, is to actually 
+        define what language quality <em>is</em>. We needed to find a way to operationalise such a concept. 
+        Thus, I decided to take an approach that combined both what our data provided and what different 
+        measures suggested "quality" is.
+    </p>
 
-    <div class="important_info">
-        <ul>
-            <li><b>Lexical Richness</b>: Ratio of unique words in a post</li>
-            <li><b>Syntactic Complexity</b>: Average words per sentence</li>
-            <li><b>Readability</b>: Automated Readability Index</li>
-            <li><b>Cognitive Depth</b>: LIWC reasoning and complexity measures</li>
-        </ul>
-        [add justifications]
-    </div>
-
+    <!-- INCLUDE: This pulls in the file you created in _includes/ -->
     {% include metrics_accordion.html %}
 
-    <div class="plot">
-        <iframe 
-            src="assets/plots/linguistic_feature_histogram.html"
-            width="100%" 
-            height="600px" 
-            style="border:none;">
-        </iframe>
+    <div class="plot-container">
+        <iframe src="assets/plots/linguistic_feature_histogram.html" width="100%" height="600px" style="border:none;"></iframe>
     </div>
-    [add only the features that we end up choosing, maybe more if interactive]
-    <br>
-    [Also, develop on the insights of these features]
+    
+    <div class="todo-note">
+        TODO: Develop on the insights of these features. Explain why distributions look like this.
+    </div>
 
-    <img src="assets/plots/feature_correlation_matrix.png" width="70%">
-    [we should refocus the plot on our current variables, and maybe
-    add a interactive feature where we can explore other potential variables]
+    <div class="plot-container">
+        <img src="assets/plots/feature_correlation_matrix.png" style="width: 70%;">
+    </div>
 
-    <br><br>
-    As you can see in this correlation matrix, our chosen features do not
-    seem to overlap, showing that they each embody one aspect of Linguistic
-    cognition and thus capture meaningful language patterns.
-
-    <br><br>
-    [We need to add more info, but depends on what features we end up choosing
-    in the end]
+    <p>
+        As you can see in this correlation matrix, our chosen features do not seem to overlap, 
+        showing that they each embody one aspect of Linguistic cognition and thus capture meaningful language patterns.
+    </p>
 </div>
 
+<!-- SECTION: SUBREDDIT QUALITY -->
 <div class="section">
-    <h1>2. Linguistic quality within a subreddit</h1>
-    <div>
-        [Add insights of posts within a specific subbreddit. ]
-        <br><br>
-        [Introduce the notion of linguistic_profile_score]
+    <h1>3. Linguistic quality within specific subreddits</h1>
+    
+    <div class="plot-container">
+        <div class="blue-frame" style="height: 600px;">
+            <iframe src="assets/plots/metric_distributions.html" width="100%" height="100%" style="border:none;"></iframe>
+        </div>
+        <p class="plot-caption">Comparison of metrics distribution of best and worst subs (min 500 posts)</p>
+    </div>
+
+    <div class="todo-note">
+        TODO: Add analysis here regarding the plot above. Why do specific subs score high/low?
     </div>
 </div>
 
+<!-- SECTION: CLUSTERING / COMMUNITY -->
 <div class="section">
-    <h1>3. Linguistic variation within a topic/community</h1>
-    <img src="assets/reddit_posts/comment_1.png" width="50%">
+    <h1>4. Linguistic variation within a topic/community</h1>
+    <img src="assets/reddit_posts/comment_1.png" class="post-image" style="width: 50%;">
 
-    <h2> Introduction </h2>
-    <div>
-        What is a community? Oxford Languages defines it as: 'a group of people 
-        living in the same place or having a particular characteristic in common.'
-        Applying this to Reddit, we can define a community as a group of users sharing a 
-        common interest. In this section, our objective is to apply clustering algorithms
-        to the subreddit embeddings. By doing so, we aim to group subreddits with similar 
-        vector representations into distinct clusters, effectively mapping out digital communities 
-        based on shared user interests.
-    </div>
+    <h2>Introduction</h2>
+    <p>
+        What is a community? Oxford Languages defines it as: 'a group of people living in the same place 
+        or having a particular characteristic in common.' Applying this to Reddit, we aim to group subreddits 
+        with similar vector representations into distinct clusters.
+    </p>
 
-    <h2> Methodology </h2>
+    <h2>Methodology</h2>
     <h3>Clustering Strategy and Challenges</h3>
     
-    <div>
-        <p>
-            The primary challenge in this analysis stems from <strong>"bridges"</strong>: 
-            subreddits frequented by users from vastly different backgrounds. These bridges 
-            exhibit a high number of neighbors, making them notoriously difficult to classify. 
-            In standard clustering, these points either force the creation of massive, noisy clusters 
-            (K-means) or are discarded entirely as outliers (HDBSCAN).
-        </p>
+    <p>
+        The primary challenge stems from <strong>"bridges"</strong>: subreddits frequented by users from 
+        vastly different backgrounds. These bridges exhibit a high number of neighbors, making them notoriously 
+        difficult to classify.
+    </p>
 
-        <h4>Why K-means Failed</h4>
-        <p>
-            Our initial attempt using <strong>K-means</strong> proved inadequate. 
-            K-means inherently assumes spherical (circular) cluster shapes and requires 
-            <i>a-priori</i> knowledge of the exact number of clusters. Given the nature of 
-            Reddit, communities are not perfectly circular; they overlap extensively due to the diverse 
-            interests of users. Forcing these high-dimensional "clouds" into rigid spheres resulted 
-            in a poor representation of the social reality.
-        </p>
+    <ul>
+        <li><strong>Why K-means Failed:</strong> It forces high-dimensional "clouds" into rigid spheres.</li>
+        <li><strong>The Density Limitation of HDBSCAN:</strong> It proved too selective, labeling too much data as noise.</li>
+        <li><strong>Solution (Network-Based Approach):</strong> We constructed a k-Nearest Neighbors (k-NN) graph and applied the Leiden algorithm.</li>
+    </ul>
 
-        <h4>The Density Limitation of HDBSCAN</h4>
-        <p>
-            <strong>HDBSCAN</strong> was a logical next step due to its ability to handle 
-            non-spherical shapes. However, it proved too selective for our dataset. 
-            While it identified high-density cores, the resulting clusters were too 
-            small, and a significant portion of the subreddits were labeled as outliers. 
-        </p>
-        <p>
-            At this stage, we realized our fundamental assumption was flawed: we were 
-            looking for <strong>predefined topics</strong> (e.g., "politics", "video games"). 
-            In reality, embeddings capture <strong>community behaviors</strong>. A cluster 
-            might not represent a single subject, but rather a specific demographic of 
-            users who share multiple interests.
-        </p>
+    <p>To refine the methodology, three key improvements were implemented:</p>
+    <ol>
+        <li><strong>Scope Restriction:</strong> Clustering performed exclusively on subreddits in our dataset.</li>
+        <li><strong>Recursive Refinement:</strong> Noisy groups were re-processed to achieve finer granularity.</li>
+        <li><strong>Representative Sampling:</strong> Only the 250 subreddits closest to each cluster's centroid were retained.</li>
+    </ol>
 
-        <h4>Transition to a Network-Based Approach</h4>
-        <p>
-            This led us to adopt a graph-based clustering approach. By constructing 
-            a k-Nearest Neighbors (k-NN) graph and applying the Leiden community detection 
-            algorithm, we moved away from purely density-based methods. This allowed us to uncover 
-            latent community structures within the uniform density of the 'bulky circle' that previous 
-            algorithms failed to partition. While initial results 
-            were promising, many subreddits still fell into irrelevant clusters. 
-            To refine the methodology, three key improvements were implemented:
-            <ul>
-                <li><strong>1. Scope Restriction:</strong> The clustering was performed exclusively on subreddits belonging to the original dataset.</li>
-                <li><strong>2. Recursive Refinement:</strong> Clusters were manually reviewed, and noisy groups were re-processed to achieve finer granularity.</li>
-                <li><strong>3. Representative Sampling:</strong> Only the 250 subreddits closest to each cluster's centroid were retained to ensure community cohesion.</li>
-            </ul> 
-        </p>
-        <p> <strong>The first improvement</strong> significantly enhanced overall results while reducing 
-            the computational load (RAM usage). By filtering out unnecessary data, the number of active 
-            subreddits was reduced from ~50,000 to approximately 17,000. </p>
-
-        <p> <strong>The second improvement</strong> expanded the diversity of identified groups. 
-            By performing a second clustering pass on the previously discarded "noise," we successfully 
-            identified 13 additional communities, bringing the total to 36 relevant clusters. </p>
-
-        <p> <strong>The third improvement</strong> ensured higher community consistency. Given that 
-            the embeddings were dense and spread out, large clusters naturally accumulated noise. 
-            To counter this, we focused on the "core" of each community: by retaining only the subreddits 
-            closest to the centroids, we preserved the most representative samples. Ultimately, the final 
-            dataset consists of 6,562 subreddits distributed across 36 high-cohesion clusters. </p>
-    </div>
-
-    <h4>Results</h4>   
-    <div style="display: flex; flex-direction: row; gap: 40px; margin: 30px 0;">
-
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="width: 100%; height: 300px; border: 2px solid #0143f8; border-radius: 8px; overflow: hidden; background: #0143f8; display: flex; align-items: center; justify-content: center;">
-                <img 
-                    src="assets/plots/embeddings_and_clustering/1st_clustering_box_no_filter.png" 
-                    alt="Distribution" 
-                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
+    <!-- 1st Clustering Results Images -->
+    <div class="grid-2-col">
+        <div class="plot-container">
+            <div class="blue-frame" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                <img src="assets/plots/embeddings_and_clustering/1st_clustering_box_no_filter.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em;"><i>Box plots of the clusters after first clustering</i></p>
+            <p class="plot-caption">Distribution after first clustering (No Filter)</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="width: 100%; height: 300px; border: 2px solid #0143f8; border-radius: 8px; overflow: hidden; background: #0143f8; display: flex; align-items: center; justify-content: center;">
-                <img 
-                    src="assets/plots/embeddings_and_clustering/1st_clustering_box_with_filter.png" 
-                    alt="Distribution" 
-                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        <div class="plot-container">
+            <div class="blue-frame" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                <img src="assets/plots/embeddings_and_clustering/1st_clustering_box_with_filter.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em;"><i>Box plots of the clusters after keeping only the 250 best subreddits</i></p>
+            <p class="plot-caption">Distribution after keeping only 250 best subreddits</p>
         </div>
     </div>
 
-    <div>
-        <p> The initial plot (left) illustrates the distribution following the first clustering pass. Clusters were ranked by size, 
-            ranging from 8,070 subreddits in Cluster 0 to 52 in Cluster 29. A significant volume of data points was identified 
-            as outliers due to their high distance from the respective centroids. 
-        </p>
+    <p>
+        The second plot demonstrates a clear improvement following the distance-based pruning. 
+        We achieved a substantial noise reduction, with most distances falling below a 0.5 threshold.
+    </p>
 
-        <p> The second plot (right) demonstrates a clear improvement following the distance-based pruning. By retaining only 
-            the subreddits closest to each centroid, we achieved a substantial noise reduction, with most distances falling 
-            below a 0.5 threshold. 
-        </p>
-
-        <p> Following this automated refinement, a manual labeling process was conducted. To facilitate this, 
-            the ten subreddits closest to each centroid were analyzed for every cluster. This allowed us to validate 
-            the thematic consistency of each group and retain only the clusters representing genuine, 
-            well-defined communities. 
-        </p>
-
-        <div style="display: flex; flex-direction: row; gap: 40px; margin: 30px 0;">
-            <div class="important_info">
-                <h4>Relevant clusters and assigned label</h4>
-                <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.95em;">
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>2:</strong> Gaming / PC</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>4:</strong> Popular / Memes</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>6:</strong> Webmarketing / Dev</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>7:</strong> Adult Content</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>9:</strong> Music</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>10:</strong> TV / Movies</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>12:</strong> Feminine Celebrity</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>13:</strong> Sports (US)</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>14:</strong> Sports (Soccer)</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>15:</strong> League of Legends</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>16:</strong> Crypto / Blockchain</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>17:</strong> Fiction / Art</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>18:</strong> My Little Pony</li>
-                    <li style="padding: 4px 0;"><strong>19:</strong> YouTube / Creators</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>21:</strong> Adult Content</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>22:</strong> Adult Content</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>23:</strong> Japanese Subreddits</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>24:</strong> K-Pop</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>25:</strong> Metafandom</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>26:</strong> Wrestling</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>27:</strong> Retrogaming</li>
-                    <li style="padding: 4px 0; border-bottom: 1px solid #f1f5f9;"><strong>28:</strong> Vape</li>
-                    <li style="padding: 4px 0;"><strong>29:</strong> Educational Video</li>
-                </ul>   
-            </div>
-            
-
-            <div class="important_info">
-                <h4>Examples of subreddit near the centroid of a cluster</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
-                    <ul>
-                        <li>Cluster 2</li>
-                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9em; line-height: 1.5;">
-                            <li>oxygennotincluded</li>
-                            <li>swgemu</li>
-                            <li>speedrunnersgame</li>
-                            <li>pokemmo</li>
-                            <li>hollowknight</li>
-                            <li>necropolis</li>
-                            <li>darksoulsmods</li>
-                            <li>sky3ds</li>
-                            <li>gits_fa</li>
-                            <li>playdreadnought</li>
-                        </ul>
-                        <li>Cluster 9</li> 
-                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9em; line-height: 1.5;">
-                            <li>soothing</li>
-                            <li>noise</li>
-                            <li>music_share</li>
-                            <li>selfmusic</li>
-                            <li>underground_music</li>
-                            <li>experimental</li>
-                            <li>redditoriginals</li>
-                            <li>glitch</li>
-                            <li>remixes</li>
-                            <li>musicinthemaking</li>
-                        </ul>
-                        <li>Cluster 16</li>
-                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9em; line-height: 1.5;">
-                            <li>bitcoinuk</li>
-                            <li>counterparty_xcp</li>
-                            <li>trezor</li>
-                            <li>augur</li>
-                            <li>lisk</li>
-                            <li>bitcoin_unlimited</li>
-                            <li>namecoin</li>
-                            <li>primecoin</li>
-                            <li>shadowcash</li>
-                            <li>nubits</li>
-                        </ul>
-                    </ul>
-                </div>
-            </div>
-        </div>  
-    </div>
-    <div>
-        <p>
-            Then we took all the subreddits from the remaining clusters and ran clustering again leading to these new clusters:
-        </p>
-        <div style="display: flex; gap: 30px; align-items: flex-start;">
-            <div style="flex: 2;">
-                <div style="border: 2px solid #0143f8; border-radius: 8px; background: #0143f8; height: 400px; display: flex; align-items: center; justify-content: center;">
-                    <img 
-                        src="assets/plots/embeddings_and_clustering/2nd_clustering_box_with_filter.png" 
-                        style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                </div>
-                <p style="text-align: center; font-style: italic; font-size: 0.9em; margin-top: 10px;">
-                    Box plots of the clusters generated from noise after keeping only the 250 best subreddits
-                </p>
-            </div>
-
-            <div style="flex: 1;">
-                <h4 style="color: #0143f8; border-bottom: 2px solid #e2e8f0; margin: 0 0 10px 0; padding-bottom: 5px;">
-                    Relevant clusters (cont.)
-                </h4>
-                <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9em;">
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>100:</strong> R4R / Personals</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>103:</strong> Politics / Academics</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>107:</strong> Adult Content</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>108:</strong> US States and Cities</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>109:</strong> Radical Politics</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>111:</strong> Adult Content</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>112:</strong> India</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>113:</strong> Image Of</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>114:</strong> Germany</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>115:</strong> News Auto</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>116:</strong> Radical Politics</li>
-                    <li style="border-bottom: 1px solid #eee; padding: 4px 0;"><strong>117:</strong> Sweden</li>
-                    <li style="padding: 4px 0;"><strong>120:</strong> Russia</li>
+    <h3>Cluster Results</h3>
+    <div class="grid-2-col">
+        <!-- Left: List of Clusters -->
+        <div class="lqi-box">
+            <h4>Relevant Clusters & Labels</h4>
+            <div class="cluster-list">
+                <ul>
+                    <li><strong>2:</strong> Gaming / PC</li>
+                    <li><strong>4:</strong> Popular / Memes</li>
+                    <li><strong>6:</strong> Webmarketing / Dev</li>
+                    <li><strong>7:</strong> Adult Content</li>
+                    <li><strong>9:</strong> Music</li>
+                    <li><strong>10:</strong> TV / Movies</li>
+                    <li><strong>12:</strong> Feminine Celebrity</li>
+                    <li><strong>13:</strong> Sports (US)</li>
+                    <li><strong>14:</strong> Sports (Soccer)</li>
+                    <li><strong>15:</strong> League of Legends</li>
+                    <li><strong>16:</strong> Crypto / Blockchain</li>
+                    <li><strong>17:</strong> Fiction / Art</li>
+                    <li><strong>18:</strong> My Little Pony</li>
+                    <li><strong>19:</strong> YouTube / Creators</li>
+                    <li><strong>21-22:</strong> Adult Content</li>
+                    <li><strong>23:</strong> Japanese Subreddits</li>
+                    <li><strong>24:</strong> K-Pop</li>
+                    <li><strong>25:</strong> Metafandom</li>
+                    <li><strong>26:</strong> Wrestling</li>
+                    <li><strong>27:</strong> Retrogaming</li>
+                    <li><strong>28:</strong> Vape</li>
+                    <li><strong>29:</strong> Educational Video</li>
                 </ul>
             </div>
+        </div>
 
+        <!-- Right: Examples -->
+        <div class="lqi-box">
+            <h4>Centroid Examples</h4>
+            <p><strong>Cluster 2 (Gaming):</strong> oxygennotincluded, swgemu, speedrunnersgame, pokemmo, hollowknight...</p>
+            <p><strong>Cluster 9 (Music):</strong> soothing, noise, music_share, selfmusic, underground_music...</p>
+            <p><strong>Cluster 16 (Crypto):</strong> bitcoinuk, counterparty_xcp, trezor, augur, lisk...</p>
         </div>
     </div>
-    <h2>Final community map</h2>
-    <div style="display: flex; flex-direction: column; align-items: center;">
-        <div style="width: 100%; height: 600px; border: 2px solid #0143f8; border-radius: 8px; overflow: hidden; background: #0143f8;">
-            <iframe 
-                src="assets/plots/embeddings_and_clustering/reddit_community_map.html" 
-                style="width: 100%; height: 100%; border: none;">
-            </iframe>
+
+    <!-- 2nd Pass Clustering -->
+    <div class="flex-row">
+        <div style="flex: 2;">
+            <div class="blue-frame" style="height: 400px; display: flex; align-items: center; justify-content: center;">
+                <img src="assets/plots/embeddings_and_clustering/2nd_clustering_box_with_filter.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+            <p class="plot-caption">Clustering generated from noise (2nd Pass)</p>
         </div>
-        <p style="margin-top: 10px; font-size: 0.9em;"><i>Final interactive community map</i></p>
+
+        <div style="flex: 1;" class="cluster-list">
+            <h4 style="color: #0143f8; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;">New Clusters Found</h4>
+            <ul>
+                <li><strong>100:</strong> R4R / Personals</li>
+                <li><strong>103:</strong> Politics / Academics</li>
+                <li><strong>107:</strong> Adult Content</li>
+                <li><strong>108:</strong> US States and Cities</li>
+                <li><strong>109:</strong> Radical Politics</li>
+                <li><strong>111:</strong> Adult Content</li>
+                <li><strong>112:</strong> India</li>
+                <li><strong>113:</strong> Image Of</li>
+                <li><strong>114:</strong> Germany</li>
+                <li><strong>115:</strong> News Auto</li>
+                <li><strong>116:</strong> Radical Politics</li>
+                <li><strong>117:</strong> Sweden</li>
+                <li><strong>120:</strong> Russia</li>
+            </ul>
+        </div>
     </div>
-    <p style="text-align: center; font-style: italic; font-size: 0.9em; margin-top: 10px;">
-        Final interactive community map (select the community to display by clicking on it on the left side of the figure)
-    </p>
-    <div>
-        <p> <b>Interesting observations:</b> </p>
 
-        <p> First, most of the clusters are dense and well-separated,
-            which successfully achieves our goal of clear topic categorization. </p>
-
-        <p> Second, we noticed some interesting outliers within the clusters. When a subreddit 
-            seems unrelated but is located at the center of a cluster, it suggests that users from 
-            that specific community actively use it, even if the connection isn't obvious at first. 
-            However, some points are clearly misplaced: for example, <b>gamingnews</b> was classified 
-            in the "My Little Pony" cluster, yet its spatial positioning on the map is between 
-            "Retrogaming" and "YouTube/Creators." This visual geography shows where it truly belongs. 
-            While a perfect classification is nearly impossible, our objective was to find the best 
-            balance between minimizing outliers and retaining as many subreddits as possible. 
-        </p>
-
-        <p> Third, there is a visible fragmentation within the "Adult Content" category, which is 
-            composed of several distinct sub-clusters. This is intentional: to avoid categorizing 
-            communities based on specific fetishes, we grouped all pornography-related subreddits 
-            under the general "Adult Content" label, even when the algorithm identified distinct 
-            sub-communities within that larger group. 
-        </p>
-        
-
+    <h2>Final Community Map</h2>
+    <div class="plot-container">
+        <div class="blue-frame" style="height: 600px;">
+            <iframe src="assets/plots/embeddings_and_clustering/reddit_community_map.html" width="100%" height="100%" style="border:none;"></iframe>
+        </div>
+        <p class="plot-caption">Interactive Community Map (Click communities on the legend to isolate)</p>
     </div>
-    
-    
 
+    <h3>Observations</h3>
+    <ul>
+        <li>Most clusters are dense and well-separated.</li>
+        <li><strong>Outliers:</strong> Some points like <i>gamingnews</i> ended up in "My Little Pony", but visual geography shows it physically located near "Retrogaming", proving the map works even if labels aren't 100% perfect.</li>
+        <li><strong>Fragmentation:</strong> "Adult Content" is split into multiple clusters to avoid grouping distinct niches, but we labeled them under one umbrella.</li>
+    </ul>
 
+    <div class="todo-note">
+        TODO: Introduce cluster methodology. Apply profile score within a community + plots 5/6.
+    </div>
+</div>
 
-
-
-    <div>
-        Introduce cluster methodology
-        <br><br>
-
-        Apply profile score within a community + apply plots 5/6 + others?
-        to see which subreddits come up on top and try to explain why
-        by looking at what makes these subreddits score well.
+<!-- SECTION: VARIATION ACROSS REDDIT -->
+<div class="section">
+    <h1>5. Linguistic variation across all reddit</h1>
+    <div class="todo-note">
+        [Present top 10 / bottom 10 across the whole dataset + insights]
         <br>
-        For interactivity we can make it so that they can explore the different
-        clusters we have
+        Depending on how robust the topic modeling is, we could aggregate results again.
     </div>
 </div>
 
-
+<!-- SECTION: NEGATIVITY -->
 <div class="section">
-    <h1>4. Linguistic variation across all reddit</h1>
-    <div>
-        [Present top 10 / bottom 10 across the whole dataset + insights 
-        from the feature comparison]
-
-        <br><br>
-
-        Depending on how robust the topic modeling is, we could aggregate
-        results again to see if there is meaningful differences between
-        the different topics in terms of linguistic profiles (so aggregate
-        profile scores again) 
-
-        <br><br>
-        Subbredit clustering -> explain results
-    </div>
-</div>
-
-
-<div class="section">
-    <h1>5. Linguistic quality and negativity</h1>
-    <div>
+    <h1>6. Linguistic quality and negativity</h1>
+    <div class="todo-note">
         [Linguistics features by post sentiment plot]
-
-        <br><br>
-        [Further analysis? Or should we include it directly in each
-        section?]
+        <br>
+        [Further analysis?]
     </div>
 </div>
 
+<!-- SECTION: CONCLUSION -->
 <div class="section">
     <h1>7. Conclusion</h1>
-    <div>
-        
+    <div class="todo-note">
+        TODO: Conclusion text.
     </div>
 </div>
 
-<div class="section">
-    <h1>Structure [to be removed]</h1>
-    <div>
-        Story feature: Conversation between a reddit user seeking to understand language quality and ourselves,
-        commenters to the post that do an analysis on language quality. Each section is introduced by OP asking a further question
-        to our comment
-        <br>
-        <br>
-        General structure
-        <ul>
-            <li>1. What is language quality?
-                <ul>
-                    <li>1.1 Explain what is linguistic quality</li>
-                    <li>1.2 Introduce our dataset</li>
-                    <li>1.3 Introduce metrics</li>
-                    <li>1.4 Show metrics justification</li>
-                </ul>
-            </li>
-            <li>2. Linguistic variation within a subreddit</li>
-            <li>3. Linguistic variation within a topic/community</li>
-            <li>4. Linguistic variation between different topics/communities</li>
-            <li>5. Linguistic quality and negativity</li>
-            <li>7. Conclusion</li>
-                <ul>Why focus on language quality?</ul>
-        </ul> 
-    </div>
-    <div class="important_info">
-        <h3>Research Questions:</h3>
+<!-- ========================================== -->
+<!-- SCRATCHPAD (Remove before publishing)      -->
+<!-- ========================================== -->
+<div class="section" style="background-color: #fce4ec; padding: 20px; border-radius: 8px;">
+    <h3>Structure / To-Do List</h3>
+    <ul>
+        <li>1. What is language quality? (Intro, Dataset, Metrics)</li>
+        <li>2. Linguistic quality within specific subreddits</li>
+        <li>3. Linguistic variation within a topic/community</li>
+        <li>4. Linguistic variation between different topics/communities</li>
+        <li>5. Linguistic quality and negativity</li>
+        <li>6. Conclusion</li>
+    </ul>
+    
+    <div class="todo-note">
+        <strong>Research Questions:</strong>
         <ol>
             <li>RQ1</li>
             <li>RQ2</li>
         </ol>
     </div>
-    <br>
-    <div class="important_info">
-        Add any relevant important information or key finding that needs to be highlighted
-    </div>
 </div>
-
-
-
-
