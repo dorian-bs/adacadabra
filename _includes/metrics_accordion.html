@@ -123,4 +123,69 @@
                 <span class="metric-arrow">▼</span>
             </div>
             <div class="metric-content">
-                <div class="metric-co
+                <div class="metric-content-inner">
+                    <div class="metric-formula">(0.5 * Avg Word Len) + log(Avg Sentence Len)</div>
+                    <p><span class="metric-label">Justification:</span> Simple sentence length is noisy (a 50-word list of groceries is not "complex"). We created a composite score that rewards using longer, more complex words <i>within</i> structurally longer sentences.</p>
+                    <p><span class="metric-label">Why it matters:</span> This identifies "Elaborated Code"—language used to construct detailed arguments rather than quick, reactive firing.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric 3: Formality Index (New) -->
+        <div class="metric-item">
+            <div class="metric-header" onclick="toggleMetric(this)">
+                <div class="metric-title-group">
+                    <span class="metric-name">Formality Index</span>
+                    <span class="metric-short">Objectivity vs. Subjectivity (Contextuality).</span>
+                </div>
+                <span class="metric-arrow">▼</span>
+            </div>
+            <div class="metric-content">
+                <div class="metric-content-inner">
+                    <div class="metric-formula">Articles - Pronouns - (2 * Swearing) - Uppercase</div>
+                    <p><span class="metric-label">Justification:</span> Based on Heylighen & Dewaele (2002). 
+                    <br>• <b>(+) Articles (The/A):</b> Indicate noun-heavy, objective descriptions.
+                    <br>• <b>(-) Pronouns (I/You):</b> Indicate subjective, chatty interaction.
+                    <br>• <b>(-) Swearing/Caps:</b> Heavily penalized markers of impulsivity.</p>
+                    <p><span class="metric-label">Why it matters:</span> It separates "Contextual" language (casual, face-to-face style) from "Formal" language (academic/professional style).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric 4: Cognitive Depth (Same) -->
+        <div class="metric-item">
+            <div class="metric-header" onclick="toggleMetric(this)">
+                <div class="metric-title-group">
+                    <span class="metric-name">Cognitive Depth</span>
+                    <span class="metric-short">The presence of active reasoning.</span>
+                </div>
+                <span class="metric-arrow">▼</span>
+            </div>
+            <div class="metric-content">
+                <div class="metric-content-inner">
+                    <div class="metric-formula">Mean(LIWC_CogMech + LIWC_Insight + LIWC_Cause)</div>
+                    <p><span class="metric-label">Justification:</span> We aggregate LIWC categories that track words related to processing information (<i>think, know</i>) and causality (<i>because, hence, effect</i>).</p>
+                    <p><span class="metric-label">Why it matters:</span> This distinguishes between descriptive storytelling or emotional venting and analytical reasoning.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function toggleMetric(element) {
+        // Toggle the active class on the parent item
+        const item = element.parentElement;
+        item.classList.toggle('active');
+
+        // Handle the max-height for the slide effect
+        const content = item.querySelector('.metric-content');
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    }
+</script>
+<!-- END: Metric Accordion Component -->
