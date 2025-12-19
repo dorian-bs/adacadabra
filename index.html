@@ -241,22 +241,20 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
                 <li><strong>3. Representative Sampling:</strong> Only the 250 subreddits closest to each cluster's centroid were retained to ensure community cohesion.</li>
             </ul> 
         </p>
+        <p> <strong>The first improvement</strong> significantly enhanced overall results while reducing 
+            the computational load (RAM usage). By filtering out unnecessary data, the number of active 
+            subreddits was reduced from ~50,000 to approximately 17,000. </p>
 
-        <img src="assets/img/embedding_clustering/improv_in_clustering.png" width="50%">
+        <p> <strong>The second improvement</strong> expanded the diversity of identified groups. 
+            By performing a second clustering pass on the previously discarded "noise," we successfully 
+            identified 13 additional communities, bringing the total to 36 relevant clusters. </p>
 
-        <p>
-            The first improvements leads to better results and easyness for the ram to run. The available subbreddits dropped from 
-            ~50 000 to ~17 000.
-        </p>
-        <p>
-            The second improvement leads to a larger number of community. The second run on the noise gave the opportunity to create 13 other clusters
-        </p>
-        <p>
-            The third improvement leads to a consistent community. As previously mentioned, the embeddings were bulky and far from the centers, it was nearly impossible
-            to avoid noise for big clusters. Then we thoughts that despites having a lot of noisy samples for each community, let's keep the ground
-            subreddits from which a community is defined. at the end, only 6562 subreddits remains for a total of 36 clusters.
-        </p>
-    </div>
+        <p> <strong>The third improvement</strong> ensured higher community consistency. Given that 
+            the embeddings were dense and spread out, large clusters naturally accumulated noise. 
+            To counter this, we focused on the "core" of each community: by retaining only the subreddits 
+            closest to the centroids, we preserved the most representative samples. Ultimately, the final 
+            dataset consists of 6,562 subreddits distributed across 36 high-cohesion clusters. </p>
+            </div>
 
     
     
