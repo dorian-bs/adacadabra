@@ -6,10 +6,11 @@
         flex-direction: column;
         gap: 10px;
         margin-top: 15px;
+        font-family: sans-serif; /* Ensure readable font */
     }
 
     .metric-item {
-        background-color: rgba(255, 255, 255, 0.5); /* Slight white tint */
+        background-color: rgba(255, 255, 255, 0.5);
         border: 1px solid #ccc;
         border-radius: 8px;
         overflow: hidden;
@@ -76,10 +77,11 @@
         padding: 5px 10px;
         border-radius: 4px;
         font-family: monospace;
-        font-size: 0.9em;
+        font-size: 0.85em;
         display: inline-block;
         margin-bottom: 10px;
         border: 1px solid #ddd;
+        color: #d63384; /* Code pink/red color */
     }
 
     .metric-label {
@@ -89,98 +91,36 @@
 </style>
 
 <div class="important_info">
-    <p>We operationalized language quality using four distinct dimensions. Click on each metric to see how it is calculated and why it matters.</p>
+    <p>To calculate the <b>Linguistic Quality Index (LQI)</b>, we aggregated four robust dimensions. Click below to see the exact formulas derived from our data processing.</p>
     
     <div class="metric-accordion">
         
-        <!-- Metric 1: Lexical Richness -->
+        <!-- Metric 1: Lexical Richness (Updated to Herdan's C) -->
         <div class="metric-item">
             <div class="metric-header" onclick="toggleMetric(this)">
                 <div class="metric-title-group">
                     <span class="metric-name">Lexical Richness</span>
-                    <span class="metric-short">The diversity of vocabulary used.</span>
+                    <span class="metric-short">Robust vocabulary diversity (Herdan's C).</span>
                 </div>
                 <span class="metric-arrow">▼</span>
             </div>
             <div class="metric-content">
                 <div class="metric-content-inner">
-                    <div class="metric-formula">Formula: Unique Words / Total Words (Type-Token Ratio)</div>
-                    <p><span class="metric-label">Justification:</span> This metric measures vocabulary diversity. A score of 1.0 means every word in the post is unique, while a low score indicates high repetition.</p>
-                    <p><span class="metric-label">Why we chose it:</span> High-quality discourse usually avoids excessive repetition and employs a precise, varied vocabulary to convey nuance. Low lexical richness often correlates with low-effort spam or "circlejerk" repetition.</p>
+                    <div class="metric-formula">log(Unique Words) / log(Total Words)</div>
+                    <p><span class="metric-label">Justification:</span> Standard Type-Token Ratio (Unique/Total) is biased against long texts. We used Herdan's C (Log-TTR) to ensure fair comparison between short comments and long rants.</p>
+                    <p><span class="metric-label">Why it matters:</span> It distinguishes between users who repeat the same keywords ("spam/circlejerk") and users who employ a varied, precise vocabulary.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Metric 2: Syntactic Complexity -->
+        <!-- Metric 2: Structural Complexity (Updated) -->
         <div class="metric-item">
             <div class="metric-header" onclick="toggleMetric(this)">
                 <div class="metric-title-group">
-                    <span class="metric-name">Syntactic Complexity</span>
-                    <span class="metric-short">The structural elaboratedness of sentences.</span>
+                    <span class="metric-name">Structural Complexity</span>
+                    <span class="metric-short">A balance of word length and sentence construction.</span>
                 </div>
                 <span class="metric-arrow">▼</span>
             </div>
             <div class="metric-content">
-                <div class="metric-content-inner">
-                    <div class="metric-formula">Formula: Average Words per Sentence</div>
-                    <p><span class="metric-label">Justification:</span> This acts as a proxy for grammatical complexity. Longer sentences typically require the use of conjunctions, subordinate clauses, and more advanced grammar to remain coherent.</p>
-                    <p><span class="metric-label">Why we chose it:</span> While brevity is sometimes wit, in the context of online argumentation, extremely short sentences often indicate fragmentation, memes, or reactive emotional outbursts rather than constructed arguments.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Metric 3: Readability -->
-        <div class="metric-item">
-            <div class="metric-header" onclick="toggleMetric(this)">
-                <div class="metric-title-group">
-                    <span class="metric-name">Readability (ARI)</span>
-                    <span class="metric-short">The education level required to understand the text.</span>
-                </div>
-                <span class="metric-arrow">▼</span>
-            </div>
-            <div class="metric-content">
-                <div class="metric-content-inner">
-                    <div class="metric-formula">Formula: 4.71(chars/words) + 0.5(words/sentences) - 21.43</div>
-                    <p><span class="metric-label">Justification:</span> We used the Automated Readability Index (ARI). Unlike other metrics that rely on syllable counting (which is computationally expensive and prone to error on internet slang), ARI relies on character count and sentence length.</p>
-                    <p><span class="metric-label">Why we chose it:</span> It combines word complexity (length) and sentence complexity to estimate the "Grade Level" of the text. A higher index suggests a text that requires more literacy to parse.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Metric 4: Cognitive Depth -->
-        <div class="metric-item">
-            <div class="metric-header" onclick="toggleMetric(this)">
-                <div class="metric-title-group">
-                    <span class="metric-name">Cognitive Depth</span>
-                    <span class="metric-short">The presence of reasoning and complex thought.</span>
-                </div>
-                <span class="metric-arrow">▼</span>
-            </div>
-            <div class="metric-content">
-                <div class="metric-content-inner">
-                    <div class="metric-formula">Formula: Mean(LIWC_CogMech + LIWC_Insight + LIWC_Cause)</div>
-                    <p><span class="metric-label">Justification:</span> We aggregate three LIWC (Linguistic Inquiry and Word Count) categories that track words related to: Cognitive Mechanisms (thinking, processing), Insight (understand, know, think), and Causality (because, effect, hence).</p>
-                    <p><span class="metric-label">Why we chose it:</span> This distinguishes between descriptive/emotional text and analytical text. A post can be long and use big words but say nothing (word salad). This metric checks if the user is actually <i>reasoning</i>.</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-    function toggleMetric(element) {
-        // Toggle the active class on the parent item
-        const item = element.parentElement;
-        item.classList.toggle('active');
-
-        // Handle the max-height for the slide effect
-        const content = item.querySelector('.metric-content');
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-        } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-        }
-    }
-</script>
-<!-- END: Metric Accordion Component -->
+                <div class="metric-co
