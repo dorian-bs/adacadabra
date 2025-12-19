@@ -4,145 +4,163 @@ title: The War of The Learned
 subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
 ---
 
-<!-- ========================================== -->
-<!-- INTERNAL STYLES (Make editing easier)      -->
-<!-- ========================================== -->
+<!-- ======================================================= -->
+<!-- GLOBAL STYLING SYSTEM                                   -->
+<!-- Change --theme-color here to update the whole page      -->
+<!-- ======================================================= -->
 <style>
-    /* General Layout */
-    .section {
-        margin-bottom: 60px;
-        padding-top: 20px;
+    :root {
+        /* CORE THEME COLORS */
+        --theme-color: #0143f8;       /* The main Deep Blue */
+        --theme-light: #e6edff;       /* Very light blue for backgrounds */
+        --theme-accent: #f57f17;      /* Orange for alerts/todos */
+        
+        /* TEXT & LAYOUT */
+        --text-main: #333333;
+        --text-muted: #555555;
+        --border-radius: 8px;
+        --spacing-section: 60px;
+        --spacing-item: 30px;
+    }
+
+    /* --- LAYOUT UTILITIES --- */
+    .ds-section {
+        margin-bottom: var(--spacing-section);
+        padding-top: 30px;
         border-top: 1px solid #eee;
+        color: var(--text-main);
+        line-height: 1.6;
     }
-    .section:first-of-type {
-        border-top: none;
-    }
+    .ds-section:first-of-type { border-top: none; padding-top: 0; }
 
-    /* Images & Figures */
-    .post-image {
-        display: block;
-        margin: 20px auto;
-        max-width: 80%;
-        border-radius: 4px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    /* Blue Plot Containers (The frames around iframes) */
-    .blue-frame {
-        width: 100%;
-        border: 2px solid #0143f8;
-        border-radius: 8px;
-        overflow: hidden;
-        background: #0143f8;
-        margin-bottom: 10px;
-    }
-    
-    .plot-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 20px 0;
-    }
-
-    .plot-caption {
-        font-size: 0.9em;
-        font-style: italic;
-        color: #555;
-        text-align: center;
-    }
-
-    /* Layout Grids */
-    .grid-2-col {
+    .ds-grid-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin: 30px 0;
+        gap: var(--spacing-item);
+        margin: var(--spacing-item) 0;
     }
 
-    .flex-row {
+    .ds-flex-row {
         display: flex;
-        gap: 30px;
+        gap: var(--spacing-item);
         align-items: flex-start;
-        margin: 30px 0;
+        margin: var(--spacing-item) 0;
     }
 
-    /* Cluster Lists Styling */
-    .cluster-list ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        font-size: 0.95em;
-    }
-
-    .cluster-list li {
-        padding: 6px 0;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .cluster-list strong {
-        color: #0143f8;
-    }
-
-    /* Highlights for your "To-Do" notes */
-    .todo-note {
-        background-color: #fff9c4;
-        border-left: 4px solid #fbc02d;
-        padding: 10px;
-        font-size: 0.9em;
-        margin: 15px 0;
-        font-family: monospace;
-        color: #444;
+    /* --- VISUAL COMPONENTS --- */
+    
+    /* 1. Plot Frames (Unified Style) */
+    .ds-frame {
+        width: 100%;
+        border: 2px solid var(--theme-color);
+        border-radius: var(--border-radius);
+        background: var(--theme-color);
+        overflow: hidden;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        /* Center content inside */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
-    .todo-label {
-        font-weight: bold;
-        color: #f57f17;
+    .ds-caption {
+        font-size: 0.9em;
+        font-style: italic;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 5px;
         display: block;
-        margin-bottom: 5px;
     }
 
-    /* Responsive adjustments */
+    /* 2. Images */
+    .ds-img-responsive {
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+    .ds-img-main {
+        display: block;
+        margin: 0 auto var(--spacing-item) auto;
+        max-width: 60%;
+        border-radius: var(--border-radius);
+    }
+
+    /* 3. Quotes & Highlights */
+    .ds-blockquote {
+        border-left: 5px solid var(--theme-color);
+        background: #f9f9f9;
+        padding: 15px 20px;
+        margin: 20px 0;
+        font-style: italic;
+        color: var(--text-muted);
+    }
+
+    /* 4. Lists & Clusters */
+    .ds-list-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        border-left: 5px solid var(--theme-color);
+    }
+    
+    .ds-list-clean ul { list-style: none; padding: 0; margin: 0; }
+    .ds-list-clean li { padding: 6px 0; border-bottom: 1px solid #e0e0e0; font-size: 0.95em; }
+    .ds-list-clean li:last-child { border-bottom: none; }
+    .ds-list-clean strong { color: var(--theme-color); display: inline-block; min-width: 30px; }
+
+    /* 5. TODO / Placeholder Boxes */
+    .ds-todo {
+        background-color: #fff9c4;
+        border: 1px dashed var(--theme-accent);
+        color: #444;
+        padding: 15px;
+        margin: 20px 0;
+        font-family: monospace;
+        font-size: 0.85em;
+    }
+    .ds-todo-label { font-weight: bold; color: #e65100; display: block; margin-bottom: 5px; }
+
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-        .grid-2-col, .flex-row {
-            grid-template-columns: 1fr;
-            flex-direction: column;
-        }
+        .ds-grid-2, .ds-flex-row { grid-template-columns: 1fr; flex-direction: column; }
+        .ds-img-main { max-width: 100%; }
     }
 </style>
 
-<!-- ========================================== -->
-<!-- MAIN CONTENT                               -->
-<!-- ========================================== -->
+<!-- ======================================================= -->
+<!-- CONTENT START                                           -->
+<!-- ======================================================= -->
 
-<img src="assets/reddit_posts/post_1.png" class="post-image" style="width: 50%;">
+<img src="assets/reddit_posts/post_1.png" class="ds-img-main">
 
 <!-- SECTION: INTRO -->
-<div class="section" style="border-top: 0;">
-    
-    <div class="todo-note">
-        <span class="todo-label">TODO: TLDR Section</span>
-        Maybe add a tldr, could emphasise that we are answering from a "user" perspective. I'm not 100% convinced.
+<div class="ds-section">
+    <div class="ds-todo">
+        <span class="ds-todo-label">PLACEHOLDER: TLDR</span>
+        TLDR; [Maybe add a tldr, could emphasise that we are answering from a "user" perspective.]
     </div>
 
     <p>
-        It's not the first time I've seen such sentiments around here. Actually, I find it super interesting, 
-        as such discussions about "linguistic quality" are not recent. In fact, you can find them pretty much 
-        at any point since we've begun to standardise our languages. Still, with the rise of social media 
-        and instant messaging, such perceptions have been on the rise and it could be interesting to know 
-        if they are based on actual data. And if so, what motivates the difference of language quality between users.
+        It's not the first time I've seen such sentiments around here. Actually,
+        I find it super interesting, as such discussions about "linguistic quality" are not recent,
+        in fact you can find them pretty much at any point since we've begun to standardise our languages. 
+        Still, with the rise of social media and instant messaging, such perceptions have been on the rise
+        and it could be interesting to know if they are based on actual data. And
+        if so, what motivates the difference of language quality between users.
     </p>
 
-    <div class="todo-note">
-        Should we add here the different research questions? Or do we keep the "comment based approach"? Or both?
+    <div class="ds-todo">
+        [Should we add here the different research questions? Or do we keep the "comment based approach"? Or both?]
     </div>
 </div>
 
 <!-- SECTION: DATASET -->
-<div class="section">
+<div class="ds-section">
     <h1>1. Dataset</h1>
     
     <h2>Hyperlinks</h2>
-    <div class="todo-note">[Introduce what our dataset is]</div>
+    <div class="ds-todo">[Introduce what our dataset is]</div>
 
     <h2>Embeddings</h2>
     
@@ -150,18 +168,13 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
     <p>
         Along with the initial subreddit hyperlinks dataset, we used another dataset: 
         the embedding vectors of subreddits (available on the SNAP website).
-    </p>
-    <p>
         These embeddings are high-dimensional vectors (in our case, 300 dimensions). 
         They are designed to represent similarities between data points in a complex space. 
-        Specifically, each of the ~50,000 subreddits is assigned a 300-dimensional vector. 
-        These vectors indicate similarity based on user behavior: if many users post in 
-        the same group of subreddits, those subreddits will be closer to each other in this
-        300-dimensional space.
     </p>
     <p>
-        These embeddings are very useful for our research on linguistic quality and our goal to determine 
-        'who speaks the best.' They allow us to identify clusters of subreddits where users share similar 
+        These vectors indicate similarity based on user behavior: if many users post in 
+        the same group of subreddits, those subreddits will be closer to each other in this
+        300-dimensional space. They allow us to identify clusters of subreddits where users share similar 
         interests, effectively grouping subreddits into distinct communities.
     </p>
     
@@ -170,142 +183,187 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         While these embeddings are powerful and perform well, the dataset faces challenges due to the
         nature of Reddit communities and the high number of data.
     </p>
-    <blockquote>
+    
+    <div class="ds-blockquote">
         "One might assume that a dataset of 50,000 subreddits is relatively small. However, each 
-        entry is a 300-dimensional vector, and determining similarity requires computing a pairwise 
-        distance matrix. Calculating the similarity between every possible pair of subreddits is a computationally 
-        intensive task... To overcome this technical hurdle, we implemented a batch processing approach."
-    </blockquote>
+        entry is a 300-dimensional vector... Calculating the similarity between every possible pair 
+        of subreddits is a computationally intensive task...
+        To overcome this, we implemented a batch processing approach."
+    </div>
+
     <p>
-        Indeed communities are not perfectly separated into 'clean' clusters where we can easily say: 
-        'These users are only interested in politics.' Most users have diverse interests and post in a wide
-        variety of subreddits. This creates a significant amount of overlap between vectors.
+        Indeed communities are not perfectly separated into 'clean' clusters. Most users have diverse interests 
+        and post in a wide variety of subreddits. This creates a significant amount of overlap between vectors, 
+        creating 'noisy' links and blurring the boundaries between different communities.
     </p>
 
     <h3>Visualizing the Embedding Weaknesses</h3> 
     <p>
         The following graphs illustrate the weakness mentioned previously.
+        On <b>fig 1</b>, a 2D projection shows vectors forming a large, dense circle with significant overlap.
+        On <b>fig 2</b>, the distribution reveals a non-negligible number of subreddits that have more than 10,000 neighbors with over 80% similarity.
     </p>
-    <ul>
-        <li><b>Figure 1:</b> A 2D projection shows vectors forming a large, dense circle with significant overlap.</li>
-        <li><b>Figure 2:</b> The distribution of close neighbors reveals subreddits with over 10,000 neighbors (>80% similarity).</li>
-    </ul>
 
-    <!-- Grid for Side-by-Side Plots (Stacked on mobile) -->
-    <div class="grid-2-col">
-        <!-- Plot 1 -->
-        <div class="plot-container">
-            <div class="blue-frame" style="height: 600px;">
+    <!-- Unified Plot Grid -->
+    <div class="ds-grid-2">
+        <div>
+            <div class="ds-frame" style="height: 600px;">
                 <iframe src="assets/plots/embeddings_and_clustering/reddit_map.html" width="100%" height="100%" style="border:none;"></iframe>
             </div>
-            <p class="plot-caption">Figure 1: 2D Projection of Subreddits</p>
+            <span class="ds-caption">Figure 1: 2D Projection of Subreddits</span>
         </div>
-
-        <!-- Plot 2 -->
-        <div class="plot-container">
-            <div class="blue-frame" style="height: 500px; display: flex; align-items: center; justify-content: center;">
-                <img src="assets/plots/embeddings_and_clustering/distribution_of_closed_neigbors_embeddings.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        <div>
+            <div class="ds-frame" style="height: 500px;">
+                <img src="assets/plots/embeddings_and_clustering/distribution_of_closed_neigbors_embeddings.png" class="ds-img-responsive">
             </div>
-            <p class="plot-caption">Figure 2: Distribution of Close Neighbors</p>
+            <span class="ds-caption">Figure 2: Distribution of Close Neighbors</span>
         </div>
     </div>
 </div>
 
 <!-- SECTION: DEFINING LANGUAGE -->
-<div class="section">
+<div class="ds-section">
     <h1>2. What is language quality?</h1>
     <p>
-        The first thing we need to know when trying to understand language quality on reddit, is to actually 
-        define what language quality <em>is</em>. We needed to find a way to operationalise such a concept. 
-        Thus, I decided to take an approach that combined both what our data provided and what different 
-        measures suggested "quality" is.
+        The first thing we need to know when trying to understand language quality
+        on reddit, is to actually define what language quality <em>is</em>. We needed to 
+        find a way to operationalise such a concept. Thus, I decided to take an
+        approach that combined both what our data provided and what different measures
+        suggested that this "shared construction" is, arriving at the following metrics:
     </p>
 
-    <!-- INCLUDE: This pulls in the file you created in _includes/ -->
-    {% include metrics_accordion.html %}
+    <!-- INLINE ACCORDION (Updated to use global CSS variables) -->
+    <!-- You can keep this here or use {% include metrics_accordion.html %} if you updated the file -->
+    <style>
+        .metric-item { border: 1px solid #ddd; border-radius: var(--border-radius); margin-bottom: 10px; background: white; }
+        .metric-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fdfdfd; }
+        .metric-header:hover { background: var(--theme-light); }
+        .metric-name { font-weight: bold; color: var(--theme-color); font-size: 1.1em; }
+        .metric-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; padding: 0 15px; }
+        .metric-inner { padding: 15px 0; }
+        .metric-arrow { color: var(--theme-color); transition: transform 0.3s; }
+        .metric-item.active .metric-arrow { transform: rotate(180deg); }
+    </style>
+    <div style="margin: 20px 0;">
+        <div class="metric-item">
+            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
+                <span class="metric-name">Lexical Richness (Herdan's C)</span><span class="metric-arrow">▼</span>
+            </div>
+            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> log(Unique Words) / log(Total Words). Measures vocabulary diversity robustly across length.</div></div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
+                <span class="metric-name">Structural Complexity</span><span class="metric-arrow">▼</span>
+            </div>
+            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> (0.5 * Avg Word Len) + log(Avg Sent Len). Balances sentence length and word complexity.</div></div>
+        </div>
+         <div class="metric-item">
+            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
+                <span class="metric-name">Formality Index</span><span class="metric-arrow">▼</span>
+            </div>
+            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> Articles - Pronouns - (2*Swear) - Caps. Distinguishes objective formal text from subjective chatty text.</div></div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
+                <span class="metric-name">Cognitive Depth</span><span class="metric-arrow">▼</span>
+            </div>
+            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> Mean(LIWC_CogMech + Insight + Cause). Presence of active reasoning words.</div></div>
+        </div>
+    </div>
+    <!-- END ACCORDION -->
 
-    <div class="plot-container">
-        <iframe src="assets/plots/linguistic_feature_histogram.html" width="100%" height="600px" style="border:none;"></iframe>
+    <div class="ds-frame" style="height: 600px;">
+        <iframe src="assets/plots/linguistic_feature_histogram.html" width="100%" height="100%" style="border:none;"></iframe>
     </div>
     
-    <div class="todo-note">
-        TODO: Develop on the insights of these features. Explain why distributions look like this.
+    <div class="ds-todo">
+        [add only the features that we end up choosing]
+        [Develop on the insights of these features]
     </div>
 
-    <div class="plot-container">
-        <img src="assets/plots/feature_correlation_matrix.png" style="width: 70%;">
-    </div>
-
+    <img src="assets/plots/feature_correlation_matrix.png" class="ds-img-responsive" style="max-width: 70%; margin: 20px auto; display:block;">
+    
     <p>
-        As you can see in this correlation matrix, our chosen features do not seem to overlap, 
-        showing that they each embody one aspect of Linguistic cognition and thus capture meaningful language patterns.
+        As you can see in this correlation matrix, our chosen features do not
+        seem to overlap, showing that they each embody one aspect of linguistic
+        cognition and thus capture meaningful language patterns.
     </p>
 </div>
 
 <!-- SECTION: SUBREDDIT QUALITY -->
-<div class="section">
+<div class="ds-section">
     <h1>3. Linguistic quality within specific subreddits</h1>
     
-    <div class="plot-container">
-        <div class="blue-frame" style="height: 600px;">
-            <iframe src="assets/plots/metric_distributions.html" width="100%" height="100%" style="border:none;"></iframe>
-        </div>
-        <p class="plot-caption">Comparison of metrics distribution of best and worst subs (min 500 posts)</p>
+    <div class="ds-frame" style="height: 600px;">
+        <iframe src="assets/plots/metric_distributions.html" width="100%" height="100%" style="border:none;"></iframe>
     </div>
-
-    <div class="todo-note">
-        TODO: Add analysis here regarding the plot above. Why do specific subs score high/low?
+    <span class="ds-caption">Comparison of metrics distribution of best and worst subs with at least 500 posts</span>
+    
+    <div style="margin-top: 20px;">
+        <p><b>Interesting observations:</b></p>
+        <p>First, most of the clusters are dense and well-separated, which successfully achieves our goal of clear topic categorization.</p>
+    </div>
+    
+    <div class="ds-todo">
+        [Add insights of posts within a specific subbreddit.]
+        [Introduce the notion of linguistic_profile_score]
     </div>
 </div>
 
 <!-- SECTION: CLUSTERING / COMMUNITY -->
-<div class="section">
+<div class="ds-section">
     <h1>4. Linguistic variation within a topic/community</h1>
-    <img src="assets/reddit_posts/comment_1.png" class="post-image" style="width: 50%;">
+    <img src="assets/reddit_posts/comment_1.png" class="ds-img-main" style="width: 50%;">
 
     <h2>Introduction</h2>
     <p>
-        What is a community? Oxford Languages defines it as: 'a group of people living in the same place 
-        or having a particular characteristic in common.' Applying this to Reddit, we aim to group subreddits 
-        with similar vector representations into distinct clusters.
+        What is a community? Oxford Languages defines it as: 'a group of people 
+        living in the same place or having a particular characteristic in common.'
+        Applying this to Reddit, we aim to group subreddits with similar vector representations 
+        into distinct clusters, effectively mapping out digital communities based on shared user interests.
     </p>
 
     <h2>Methodology</h2>
     <h3>Clustering Strategy and Challenges</h3>
     
     <p>
-        The primary challenge stems from <strong>"bridges"</strong>: subreddits frequented by users from 
-        vastly different backgrounds. These bridges exhibit a high number of neighbors, making them notoriously 
-        difficult to classify.
+        The primary challenge in this analysis stems from <strong>"bridges"</strong>: 
+        subreddits frequented by users from vastly different backgrounds. These bridges 
+        exhibit a high number of neighbors, making them notoriously difficult to classify.
     </p>
 
-    <ul>
-        <li><strong>Why K-means Failed:</strong> It forces high-dimensional "clouds" into rigid spheres.</li>
-        <li><strong>The Density Limitation of HDBSCAN:</strong> It proved too selective, labeling too much data as noise.</li>
-        <li><strong>Solution (Network-Based Approach):</strong> We constructed a k-Nearest Neighbors (k-NN) graph and applied the Leiden algorithm.</li>
-    </ul>
+    <div class="ds-list-box" style="margin-bottom: 20px;">
+        <div class="ds-list-clean">
+            <ul>
+                <li><strong>Why K-means Failed:</strong> It forces high-dimensional "clouds" into rigid spheres.</li>
+                <li><strong>HDBSCAN Limitations:</strong> Too selective, labeling too much data as noise.</li>
+                <li><strong>Solution:</strong> A network-based approach (k-NN graph + Leiden algorithm) to uncover latent structures.</li>
+            </ul>
+        </div>
+    </div>
 
     <p>To refine the methodology, three key improvements were implemented:</p>
     <ol>
         <li><strong>Scope Restriction:</strong> Clustering performed exclusively on subreddits in our dataset.</li>
-        <li><strong>Recursive Refinement:</strong> Noisy groups were re-processed to achieve finer granularity.</li>
+        <li><strong>Recursive Refinement:</strong> Noisy groups were re-processed (2nd pass).</li>
         <li><strong>Representative Sampling:</strong> Only the 250 subreddits closest to each cluster's centroid were retained.</li>
-    </ol>
+    </ol> 
 
-    <!-- 1st Clustering Results Images -->
-    <div class="grid-2-col">
-        <div class="plot-container">
-            <div class="blue-frame" style="height: 300px; display: flex; align-items: center; justify-content: center;">
-                <img src="assets/plots/embeddings_and_clustering/1st_clustering_box_no_filter.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+    <p>These steps significantly reduced noise and computational load, resulting in 36 high-cohesion clusters.</p>
+
+    <h4>Results (Pass 1)</h4>   
+    <div class="ds-grid-2">
+        <div>
+            <div class="ds-frame" style="height: 300px;">
+                <img src="assets/plots/embeddings_and_clustering/1st_clustering_box_no_filter.png" class="ds-img-responsive">
             </div>
-            <p class="plot-caption">Distribution after first clustering (No Filter)</p>
+            <span class="ds-caption">Distribution before filtering (High Noise)</span>
         </div>
-
-        <div class="plot-container">
-            <div class="blue-frame" style="height: 300px; display: flex; align-items: center; justify-content: center;">
-                <img src="assets/plots/embeddings_and_clustering/1st_clustering_box_with_filter.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        <div>
+            <div class="ds-frame" style="height: 300px;">
+                <img src="assets/plots/embeddings_and_clustering/1st_clustering_box_with_filter.png" class="ds-img-responsive">
             </div>
-            <p class="plot-caption">Distribution after keeping only 250 best subreddits</p>
+            <span class="ds-caption">Distribution after keeping 250 best subs (Clean)</span>
         </div>
     </div>
 
@@ -314,12 +372,12 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         We achieved a substantial noise reduction, with most distances falling below a 0.5 threshold.
     </p>
 
-    <h3>Cluster Results</h3>
-    <div class="grid-2-col">
-        <!-- Left: List of Clusters -->
-        <div class="lqi-box">
-            <h4>Relevant Clusters & Labels</h4>
-            <div class="cluster-list">
+    <!-- Cluster Lists Grid -->
+    <div class="ds-grid-2">
+        <!-- List of Clusters -->
+        <div class="ds-list-box">
+            <h4>Relevant clusters and assigned label</h4>
+            <div class="ds-list-clean">
                 <ul>
                     <li><strong>2:</strong> Gaming / PC</li>
                     <li><strong>4:</strong> Popular / Memes</li>
@@ -335,7 +393,6 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
                     <li><strong>17:</strong> Fiction / Art</li>
                     <li><strong>18:</strong> My Little Pony</li>
                     <li><strong>19:</strong> YouTube / Creators</li>
-                    <li><strong>21-22:</strong> Adult Content</li>
                     <li><strong>23:</strong> Japanese Subreddits</li>
                     <li><strong>24:</strong> K-Pop</li>
                     <li><strong>25:</strong> Metafandom</li>
@@ -343,82 +400,87 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
                     <li><strong>27:</strong> Retrogaming</li>
                     <li><strong>28:</strong> Vape</li>
                     <li><strong>29:</strong> Educational Video</li>
+                </ul>   
+            </div>
+        </div>
+        
+        <!-- Examples -->
+        <div class="ds-list-box" style="border-color: var(--text-muted);">
+            <h4>Examples near centroid</h4>
+            <div style="font-size: 0.9em; line-height: 1.6;">
+                <p><strong>Cluster 2:</strong> oxygennotincluded, swgemu, speedrunnersgame, pokemmo, hollowknight...</p>
+                <p><strong>Cluster 9:</strong> soothing, noise, music_share, selfmusic, underground_music, experimental...</p>
+                <p><strong>Cluster 16:</strong> bitcoinuk, counterparty_xcp, trezor, augur, lisk, bitcoin_unlimited...</p>
+            </div>
+        </div>  
+    </div>
+
+    <p>Then we took all the subreddits from the remaining clusters and ran clustering again leading to these new clusters:</p>
+
+    <!-- 2nd Pass Visualization -->
+    <div class="ds-flex-row">
+        <div style="flex: 2;">
+            <div class="ds-frame" style="height: 400px;">
+                <img src="assets/plots/embeddings_and_clustering/2nd_clustering_box_with_filter.png" class="ds-img-responsive">
+            </div>
+            <span class="ds-caption">Box plots of the clusters generated from noise (2nd Pass)</span>
+        </div>
+
+        <div class="ds-list-box" style="flex: 1;">
+            <h4>New clusters found</h4>
+            <div class="ds-list-clean">
+                <ul>
+                    <li><strong>100:</strong> R4R / Personals</li>
+                    <li><strong>103:</strong> Politics / Academics</li>
+                    <li><strong>107:</strong> Adult Content</li>
+                    <li><strong>108:</strong> US States and Cities</li>
+                    <li><strong>109:</strong> Radical Politics</li>
+                    <li><strong>112:</strong> India</li>
+                    <li><strong>113:</strong> Image Of</li>
+                    <li><strong>114:</strong> Germany</li>
+                    <li><strong>115:</strong> News Auto</li>
+                    <li><strong>117:</strong> Sweden</li>
+                    <li><strong>120:</strong> Russia</li>
                 </ul>
             </div>
         </div>
-
-        <!-- Right: Examples -->
-        <div class="lqi-box">
-            <h4>Centroid Examples</h4>
-            <p><strong>Cluster 2 (Gaming):</strong> oxygennotincluded, swgemu, speedrunnersgame, pokemmo, hollowknight...</p>
-            <p><strong>Cluster 9 (Music):</strong> soothing, noise, music_share, selfmusic, underground_music...</p>
-            <p><strong>Cluster 16 (Crypto):</strong> bitcoinuk, counterparty_xcp, trezor, augur, lisk...</p>
-        </div>
     </div>
 
-    <!-- 2nd Pass Clustering -->
-    <div class="flex-row">
-        <div style="flex: 2;">
-            <div class="blue-frame" style="height: 400px; display: flex; align-items: center; justify-content: center;">
-                <img src="assets/plots/embeddings_and_clustering/2nd_clustering_box_with_filter.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-            </div>
-            <p class="plot-caption">Clustering generated from noise (2nd Pass)</p>
-        </div>
+    <h2>Final community map</h2>
+    <div class="ds-frame" style="height: 600px;">
+        <iframe src="assets/plots/embeddings_and_clustering/reddit_community_map.html" width="100%" height="100%" style="border:none;"></iframe>
+    </div>
+    <span class="ds-caption">Final interactive community map (Click the legend to isolate communities)</span>
 
-        <div style="flex: 1;" class="cluster-list">
-            <h4 style="color: #0143f8; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;">New Clusters Found</h4>
-            <ul>
-                <li><strong>100:</strong> R4R / Personals</li>
-                <li><strong>103:</strong> Politics / Academics</li>
-                <li><strong>107:</strong> Adult Content</li>
-                <li><strong>108:</strong> US States and Cities</li>
-                <li><strong>109:</strong> Radical Politics</li>
-                <li><strong>111:</strong> Adult Content</li>
-                <li><strong>112:</strong> India</li>
-                <li><strong>113:</strong> Image Of</li>
-                <li><strong>114:</strong> Germany</li>
-                <li><strong>115:</strong> News Auto</li>
-                <li><strong>116:</strong> Radical Politics</li>
-                <li><strong>117:</strong> Sweden</li>
-                <li><strong>120:</strong> Russia</li>
-            </ul>
-        </div>
+    <div style="margin-top: 30px;">
+        <p><b>Interesting observations:</b></p>
+        <p>
+            First, most clusters are dense and well-separated. Second, outliers like <b>gamingnews</b> appearing in 
+            "My Little Pony" are actually spatially located near "Retrogaming" on the map, proving the geometry works even if the label is odd.
+            Third, "Adult Content" is intentionally grouped despite fragmentation to avoid granular categorization of fetishes.
+        </p>
     </div>
 
-    <h2>Final Community Map</h2>
-    <div class="plot-container">
-        <div class="blue-frame" style="height: 600px;">
-            <iframe src="assets/plots/embeddings_and_clustering/reddit_community_map.html" width="100%" height="100%" style="border:none;"></iframe>
-        </div>
-        <p class="plot-caption">Interactive Community Map (Click communities on the legend to isolate)</p>
-    </div>
-
-    <h3>Observations</h3>
-    <ul>
-        <li>Most clusters are dense and well-separated.</li>
-        <li><strong>Outliers:</strong> Some points like <i>gamingnews</i> ended up in "My Little Pony", but visual geography shows it physically located near "Retrogaming", proving the map works even if labels aren't 100% perfect.</li>
-        <li><strong>Fragmentation:</strong> "Adult Content" is split into multiple clusters to avoid grouping distinct niches, but we labeled them under one umbrella.</li>
-    </ul>
-
-    <div class="todo-note">
-        TODO: Introduce cluster methodology. Apply profile score within a community + plots 5/6.
+    <div class="ds-todo">
+        Introduce cluster methodology
+        Apply profile score within a community + apply plots 5/6 + others?
     </div>
 </div>
 
 <!-- SECTION: VARIATION ACROSS REDDIT -->
-<div class="section">
-    <h1>5. Linguistic variation across all reddit</h1>
-    <div class="todo-note">
+<div class="ds-section">
+    <h1>4. Linguistic variation across all reddit</h1>
+    <div class="ds-todo">
         [Present top 10 / bottom 10 across the whole dataset + insights]
         <br>
-        Depending on how robust the topic modeling is, we could aggregate results again.
+        [Subbredit clustering -> explain results]
     </div>
 </div>
 
 <!-- SECTION: NEGATIVITY -->
-<div class="section">
-    <h1>6. Linguistic quality and negativity</h1>
-    <div class="todo-note">
+<div class="ds-section">
+    <h1>5. Linguistic quality and negativity</h1>
+    <div class="ds-todo">
         [Linguistics features by post sentiment plot]
         <br>
         [Further analysis?]
@@ -426,28 +488,19 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
 </div>
 
 <!-- SECTION: CONCLUSION -->
-<div class="section">
+<div class="ds-section">
     <h1>7. Conclusion</h1>
-    <div class="todo-note">
-        TODO: Conclusion text.
+    <div class="ds-todo">
+        TODO: Conclusion
     </div>
 </div>
 
-<!-- ========================================== -->
-<!-- SCRATCHPAD (Remove before publishing)      -->
-<!-- ========================================== -->
-<div class="section" style="background-color: #fce4ec; padding: 20px; border-radius: 8px;">
-    <h3>Structure / To-Do List</h3>
-    <ul>
-        <li>1. What is language quality? (Intro, Dataset, Metrics)</li>
-        <li>2. Linguistic quality within specific subreddits</li>
-        <li>3. Linguistic variation within a topic/community</li>
-        <li>4. Linguistic variation between different topics/communities</li>
-        <li>5. Linguistic quality and negativity</li>
-        <li>6. Conclusion</li>
-    </ul>
-    
-    <div class="todo-note">
+<!-- SECTION: STRUCTURE (Remove later) -->
+<div class="ds-section" style="background-color: var(--theme-light); padding: 20px; border-radius: 8px;">
+    <h1>Structure [to be removed]</h1>
+    <div>
+        Story feature: Conversation between a reddit user seeking to understand language quality and ourselves.
+        <br><br>
         <strong>Research Questions:</strong>
         <ol>
             <li>RQ1</li>
