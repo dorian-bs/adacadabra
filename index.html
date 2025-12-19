@@ -47,21 +47,24 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         margin: var(--spacing-item) 0;
     }
 
-    /* --- VISUAL COMPONENTS --- */
+    /* --- VISUAL COMPONENTS (FIXED) --- */
     
-    /* 1. Plot Frames (Unified Style) */
+    /* 1. Plot Frames */
     .ds-frame {
         width: 100%;
-        border: 2px solid var(--theme-color);
+        /* Only the thin outer line is blue */
+        border: 2px solid var(--theme-color); 
         border-radius: var(--border-radius);
-        background: var(--theme-color);
+        /* Background is white so images/plots sit on clean canvas */
+        background: white; 
         overflow: hidden;
         margin-bottom: 10px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        /* Center content inside */
+        /* Flex centers content, but prevents "stretching" weirdness */
         display: flex;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
     }
     
     .ds-caption {
@@ -76,6 +79,7 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
     /* 2. Images */
     .ds-img-responsive {
         max-width: 100%;
+        max-height: 100%; /* Prevents vertical overflow */
         height: auto;
         object-fit: contain;
     }
@@ -86,28 +90,16 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         border-radius: var(--border-radius);
     }
 
-    /* 3. Quotes & Highlights */
-    .ds-blockquote {
-        border-left: 5px solid var(--theme-color);
-        background: #f9f9f9;
-        padding: 15px 20px;
-        margin: 20px 0;
-        font-style: italic;
-        color: var(--text-muted);
-    }
-
     /* 4. Lists & Clusters */
     .ds-list-box {
         background: #f8f9fa;
         padding: 20px;
         border-radius: var(--border-radius);
         border-left: 5px solid var(--theme-color);
+        /* CRITICAL FIX: Prevents border from stretching to match neighbor's height */
+        height: fit-content; 
+        box-sizing: border-box;
     }
-    
-    .ds-list-clean ul { list-style: none; padding: 0; margin: 0; }
-    .ds-list-clean li { padding: 6px 0; border-bottom: 1px solid #e0e0e0; font-size: 0.95em; }
-    .ds-list-clean li:last-child { border-bottom: none; }
-    .ds-list-clean strong { color: var(--theme-color); display: inline-block; min-width: 30px; }
 
     /* 5. TODO / Placeholder Boxes */
     .ds-todo {
