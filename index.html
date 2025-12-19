@@ -426,24 +426,33 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
         </div>
         <p style="margin-top: 10px; font-size: 0.9em;"><i>Final interactive community map</i></p>
     </div>
-
-
-
-    <div class="plot">
-        <iframe 
-            src="assets/plots/embeddings_and_clustering/reddit_community_map.html"
-            width="100%" 
-            height="100%" 
-            style="border:none;">
-        </iframe>
-    </div>
     <p style="text-align: center; font-style: italic; font-size: 0.9em; margin-top: 10px;">
-        Final interactive community map
+        Final interactive community map (select the community to display by clicking on it on the left side of the figure)
     </p>
     <div>
-        <p>
-            <b></b>
+        <p> <b>Interesting observations:</b> </p>
+
+        <p> First, most of the clusters are dense and well-separated,
+            which successfully achieves our goal of clear topic categorization. </p>
+
+        <p> Second, we noticed some interesting outliers within the clusters. When a subreddit 
+            seems unrelated but is located at the center of a cluster, it suggests that users from 
+            that specific community actively use it, even if the connection isn't obvious at first. 
+            However, some points are clearly misplaced: for example, <b>gamingnews</b> was classified 
+            in the "My Little Pony" cluster, yet its spatial positioning on the map is between 
+            "Retrogaming" and "YouTube/Creators." This visual geography shows where it truly belongs. 
+            While a perfect classification is nearly impossible, our objective was to find the best 
+            balance between minimizing outliers and retaining as many subreddits as possible. 
         </p>
+
+        <p> Third, there is a visible fragmentation within the "Adult Content" category, which is 
+            composed of several distinct sub-clusters. This is intentional: to avoid categorizing 
+            communities based on specific fetishes, we grouped all pornography-related subreddits 
+            under the general "Adult Content" label, even when the algorithm identified distinct 
+            sub-communities within that larger group. 
+        </p>
+        
+
     </div>
     
     
