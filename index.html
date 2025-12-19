@@ -113,6 +113,108 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
     }
     .ds-todo-label { font-weight: bold; color: #e65100; display: block; margin-bottom: 5px; }
 
+    /* 6. Scoped styles for the metric accordion */
+    .metric-accordion {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        font-family: sans-serif; /* Ensure readable font */
+    }
+
+    .metric-item {
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .metric-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    .metric-header:hover {
+        background-color: rgba(0, 0, 0, 0.07);
+    }
+
+    .metric-title-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .metric-name {
+        font-weight: bold;
+        font-size: 1.1em;
+        color: #0143f8; /* Matching your blue theme */
+    }
+
+    .metric-short {
+        font-size: 0.9em;
+        color: #555;
+        font-style: italic;
+    }
+
+    .metric-arrow {
+        font-size: 1.2em;
+        transition: transform 0.3s ease;
+        color: #0143f8;
+    }
+
+    .metric-item.active .metric-arrow {
+        transform: rotate(180deg);
+    }
+
+    .metric-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        padding: 0 15px;
+        background-color: white;
+    }
+
+    .metric-content-inner {
+        padding: 15px 0;
+        font-size: 0.95em;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .metric-formula {
+        background-color: #f4f4f4;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.85em;
+        display: inline-block;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        color: #d63384; /* Code pink/red color */
+    }
+
+    .metric-label {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    .accordion {
+        /* The Dark Blue Left Border */
+        border-left: 6px solid #0b1e47; 
+        
+        /* Box styling */
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 0 8px 8px 0; /* Round only the right corners */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        font-family: sans-serif;
+    }
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .ds-grid-2, .ds-flex-row { grid-template-columns: 1fr; flex-direction: column; }
@@ -226,43 +328,108 @@ subtitle: Data-driven Linguistic Quality Analysis based on Reddit data
 
     <!-- INLINE ACCORDION (Updated to use global CSS variables) -->
     <!-- You can keep this here or use {% include metrics_accordion.html %} if you updated the file -->
-    <style>
-        .metric-item { border: 1px solid #ddd; border-radius: var(--border-radius); margin-bottom: 10px; background: white; }
-        .metric-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fdfdfd; }
-        .metric-header:hover { background: var(--theme-light); }
-        .metric-name { font-weight: bold; color: var(--theme-color); font-size: 1.1em; }
-        .metric-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; padding: 0 15px; }
-        .metric-inner { padding: 15px 0; }
-        .metric-arrow { color: var(--theme-color); transition: transform 0.3s; }
-        .metric-item.active .metric-arrow { transform: rotate(180deg); }
-    </style>
-    <div style="margin: 20px 0;">
-        <div class="metric-item">
-            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
-                <span class="metric-name">Lexical Richness (Herdan's C)</span><span class="metric-arrow">▼</span>
+
+    <!-- START: Metric Accordion Component -->
+    <div class="accordion">
+        <p>To calculate the <b>Linguistic Quality Index (LQI)</b>, we aggregated four robust dimensions. Click below to see the exact formulas derived from our data processing.</p>
+        
+        <div class="metric-accordion">
+            
+            <!-- Metric 1: Lexical Richness (Updated to Herdan's C) -->
+            <div class="metric-item">
+                <div class="metric-header" onclick="toggleMetric(this)">
+                    <div class="metric-title-group">
+                        <span class="metric-name">Lexical Richness</span>
+                        <span class="metric-short">Robust vocabulary diversity (Herdan's C).</span>
+                    </div>
+                    <span class="metric-arrow">▼</span>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-content-inner">
+                        <div class="metric-formula">log(Unique Words) / log(Total Words)</div>
+                        <p><span class="metric-label">Justification:</span> Standard Type-Token Ratio (Unique/Total) is biased against long texts. We used Herdan's C (Log-TTR) to ensure fair comparison between short comments and long rants.</p>
+                        <p><span class="metric-label">Why it matters:</span> It distinguishes between users who repeat the same keywords ("spam/circlejerk") and users who employ a varied, precise vocabulary.</p>
+                    </div>
+                </div>
             </div>
-            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> log(Unique Words) / log(Total Words). Measures vocabulary diversity robustly across length.</div></div>
-        </div>
-        <div class="metric-item">
-            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
-                <span class="metric-name">Structural Complexity</span><span class="metric-arrow">▼</span>
+
+            <!-- Metric 2: Structural Complexity (Updated) -->
+            <div class="metric-item">
+                <div class="metric-header" onclick="toggleMetric(this)">
+                    <div class="metric-title-group">
+                        <span class="metric-name">Structural Complexity</span>
+                        <span class="metric-short">A balance of word length and sentence construction.</span>
+                    </div>
+                    <span class="metric-arrow">▼</span>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-content-inner">
+                        <div class="metric-formula">(0.5 * Avg Word Len) + log(Avg Sentence Len)</div>
+                        <p><span class="metric-label">Justification:</span> Simple sentence length is noisy (a 50-word list of groceries is not "complex"). We created a composite score that rewards using longer, more complex words <i>within</i> structurally longer sentences.</p>
+                        <p><span class="metric-label">Why it matters:</span> This identifies "Elaborated Code"—language used to construct detailed arguments rather than quick, reactive firing.</p>
+                    </div>
+                </div>
             </div>
-            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> (0.5 * Avg Word Len) + log(Avg Sent Len). Balances sentence length and word complexity.</div></div>
-        </div>
-         <div class="metric-item">
-            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
-                <span class="metric-name">Formality Index</span><span class="metric-arrow">▼</span>
+
+            <!-- Metric 3: Formality Index (New) -->
+            <div class="metric-item">
+                <div class="metric-header" onclick="toggleMetric(this)">
+                    <div class="metric-title-group">
+                        <span class="metric-name">Formality Index</span>
+                        <span class="metric-short">Objectivity vs. Subjectivity (Contextuality).</span>
+                    </div>
+                    <span class="metric-arrow">▼</span>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-content-inner">
+                        <div class="metric-formula">Articles - Pronouns - (2 * Swearing) - Uppercase</div>
+                        <p><span class="metric-label">Justification:</span> Based on Heylighen & Dewaele (2002). 
+                        <br>• <b>(+) Articles (The/A):</b> Indicate noun-heavy, objective descriptions.
+                        <br>• <b>(-) Pronouns (I/You):</b> Indicate subjective, chatty interaction.
+                        <br>• <b>(-) Swearing/Caps:</b> Heavily penalized markers of impulsivity.</p>
+                        <p><span class="metric-label">Why it matters:</span> It separates "Contextual" language (casual, face-to-face style) from "Formal" language (academic/professional style).</p>
+                    </div>
+                </div>
             </div>
-            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> Articles - Pronouns - (2*Swear) - Caps. Distinguishes objective formal text from subjective chatty text.</div></div>
-        </div>
-        <div class="metric-item">
-            <div class="metric-header" onclick="this.parentElement.classList.toggle('active'); var c=this.nextElementSibling; c.style.maxHeight=c.style.maxHeight?null:c.scrollHeight+'px';">
-                <span class="metric-name">Cognitive Depth</span><span class="metric-arrow">▼</span>
+
+            <!-- Metric 4: Cognitive Depth (Same) -->
+            <div class="metric-item">
+                <div class="metric-header" onclick="toggleMetric(this)">
+                    <div class="metric-title-group">
+                        <span class="metric-name">Cognitive Depth</span>
+                        <span class="metric-short">The presence of active reasoning.</span>
+                    </div>
+                    <span class="metric-arrow">▼</span>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-content-inner">
+                        <div class="metric-formula">Mean(LIWC_CogMech + LIWC_Insight + LIWC_Cause)</div>
+                        <p><span class="metric-label">Justification:</span> We aggregate LIWC categories that track words related to processing information (<i>think, know</i>) and causality (<i>because, hence, effect</i>).</p>
+                        <p><span class="metric-label">Why it matters:</span> This distinguishes between descriptive storytelling or emotional venting and analytical reasoning.</p>
+                    </div>
+                </div>
             </div>
-            <div class="metric-content"><div class="metric-inner"><strong>Formula:</strong> Mean(LIWC_CogMech + Insight + Cause). Presence of active reasoning words.</div></div>
+
         </div>
     </div>
-    <!-- END ACCORDION -->
+
+    <script>
+        function toggleMetric(element) {
+            // Toggle the active class on the parent item
+            const item = element.parentElement;
+            item.classList.toggle('active');
+
+            // Handle the max-height for the slide effect
+            const content = item.querySelector('.metric-content');
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+    </script>
+    <!-- END: Metric Accordion Component -->
+
 
     <div class="ds-frame" style="height: 600px;">
         <iframe src="assets/plots/linguistic_feature_histogram.html" width="100%" height="100%" style="border:none;"></iframe>
